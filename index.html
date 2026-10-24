@@ -358,8 +358,8 @@ body:not(.revealed) .hero .in > *{opacity:0}
       });
     });
   });
-  /* Warm the frame cache during the envelope opening. */
-  intro.addEventListener('click', function () { preloadFrames().catch(function () {}); }, {once:true});
+  /* Warm the frame cache as soon as the page initializes. */
+  preloadFrames().catch(function () {});
 
 })();
 
