@@ -2,7 +2,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Noto+Serif+TC:wght@400;500&display=swap" rel="stylesheet">
 <title>和平邀請函</title>
 <link rel="preload" as="image" href="images/not-friends.jpg">
-<link rel="preload" as="image" href="images/friends-poster.jpg">
+<link rel="preload" as="image" href="images/friends-small.gif">
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
 /* A phone-width column. A photographed envelope covers the page; the seal fades, the envelope parts upward and downward, and the invitation scrolls beneath. Single light look by choice. */
@@ -235,7 +235,7 @@ body:not(.revealed) .hero .in > *{opacity:0}
     </div>
     <div class="friend-media" id="friendMedia" hidden>
       <p id="friendMessage" role="status" aria-live="polite"></p>
-      <video id="friendVideo" src="images/friends-fast.mp4" poster="images/friends-poster.jpg" controls playsinline preload="auto" hidden></video>
+      <img id="friendAnimation" src="images/friends-small.gif" alt="送給好朋友的動畫" loading="eager" decoding="async" hidden>
       <img id="friendImage" src="images/not-friends.jpg" alt="大猩猩比出中指的趣味圖片" loading="eager" decoding="async" hidden>
     </div>
   </section>
@@ -297,21 +297,16 @@ body:not(.revealed) .hero .in > *{opacity:0}
   intro.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
 
   /* relationship selection: keep playback within the user's click gesture */
-  var friendVideo = document.getElementById('friendVideo');
+  var friendAnimation = document.getElementById('friendAnimation');
   document.querySelectorAll('[data-friend]').forEach(function (button) {
     button.addEventListener('click', function () {
       var friends = button.getAttribute('data-friend') === 'yes';
-      friendVideo.pause();
-      friendVideo.hidden = !friends;
+      friendAnimation.hidden = !friends;
       document.getElementById('friendImage').hidden = friends;
       document.getElementById('friendMedia').hidden = false;
-      document.getElementById('friendMessage').textContent = friends ? '這段影片送給好朋友！' : '這張圖片送給你！';
+      document.getElementById('friendMessage').textContent = friends ? '這個動畫送給好朋友！' : '這張圖片送給你！';
       document.querySelectorAll('[data-friend]').forEach(function (b) { b.setAttribute('aria-pressed', String(b === button)); });
-      if (friends) {
-        if (friendVideo.readyState >= 1) friendVideo.currentTime = 0;
-        var playback = friendVideo.play();
-        if (playback && playback.catch) playback.catch(function () { document.getElementById('friendMessage').textContent = '這段影片送給好朋友！請按播放觀看。'; });
-      }
+
     });
   });
 
