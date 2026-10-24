@@ -308,7 +308,7 @@ body:not(.revealed) .hero .in > *{opacity:0}
       document.getElementById('friendMessage').textContent = friends ? '這段影片送給好朋友！' : '這張圖片送給你！';
       document.querySelectorAll('[data-friend]').forEach(function (b) { b.setAttribute('aria-pressed', String(b === button)); });
       if (friends) {
-        friendVideo.currentTime = 0;
+        if (friendVideo.readyState >= 1) friendVideo.currentTime = 0;
         var playback = friendVideo.play();
         if (playback && playback.catch) playback.catch(function () { document.getElementById('friendMessage').textContent = '這段影片送給好朋友！請按播放觀看。'; });
       }
