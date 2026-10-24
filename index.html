@@ -2,7 +2,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Noto+Serif+TC:wght@400;500&display=swap" rel="stylesheet">
 <title>和平邀請函</title>
 <link rel="preload" as="image" href="images/not-friends.jpg">
-<link rel="preload" as="image" href="images/friends-frames/frame-001.jpg">
+<link rel="preload" as="image" href="images/friends-frames/frame-031.jpg">
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
 /* A phone-width column. A photographed envelope covers the page; the seal fades, the envelope parts upward and downward, and the invitation scrolls beneath. Single light look by choice. */
@@ -235,7 +235,7 @@ body:not(.revealed) .hero .in > *{opacity:0}
     </div>
     <div class="friend-media" id="friendMedia" hidden>
       <p id="friendMessage" role="status" aria-live="polite"></p>
-      <img id="friendAnimation" src="images/friends-frames/frame-001.jpg" alt="送給好朋友的動畫" loading="eager" decoding="async" hidden>
+      <img id="friendAnimation" src="images/friends-frames/frame-031.jpg" alt="送給好朋友的動畫" loading="eager" decoding="async" hidden>
       <img id="friendImage" src="images/not-friends.jpg" alt="大猩猩比出中指的趣味圖片" loading="eager" decoding="async" hidden>
     </div>
   </section>
@@ -296,12 +296,12 @@ body:not(.revealed) .hero .in > *{opacity:0}
   intro.addEventListener('click', open);
   intro.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
 
-  /* Still-image frame player: 100 frames, 10 fps. */
+  /* Still-image frame player: source frames 31 through 64, 10 fps. */
   var friendAnimation = document.getElementById('friendAnimation');
   var frameTimer = null, frameIndex = 0, selectionVersion = 0, framesReady;
-  var frameImages = [], frameCount = 100, frameInterval = 100;
+  var frameImages = [], firstFrame = 31, frameCount = 34, frameInterval = 100;
   function framePath(index) {
-    return 'images/friends-frames/frame-' + String(index + 1).padStart(3, '0') + '.jpg';
+    return 'images/friends-frames/frame-' + String(index + firstFrame).padStart(3, '0') + '.jpg';
   }
   function preloadFrames() {
     if (framesReady) return framesReady;
