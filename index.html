@@ -207,6 +207,21 @@ body:not(.revealed) .hero .in > *{opacity:0}
 #friendAnimation{width:100%;aspect-ratio:16/9;border-radius:12px;background-image:url("images/friends-sprite.jpg");background-size:600% 600%;background-position:0 0;background-repeat:no-repeat}
 .spark{position:absolute; width:8px; height:8px; z-index:1; opacity:.7; pointer-events:none}
 @media (prefers-reduced-motion:reduce){.seal img,.tap{animation:none}html{scroll-behavior:auto}}
+/* Reduced motion keeps a visible crossfade and explicit final states. */
+@keyframes gentle-reveal{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .opening-aura,.envelope,.opened .envelope,.hint::before,.hint::after,.hint i,.tap{animation:none;transform:none}
+  .opened .envelope{opacity:1}
+  .envelope-letter,.opened .envelope-letter,.envelope-flap,.opened .envelope-flap{transform:none;transition:none}
+  .envelope-seal,.opened .envelope-seal{scale:1;opacity:1;transition:none}
+  .opened .hint,.opened .tap{opacity:0;transition:opacity .3s ease}
+  .opening-burst,#petals{display:none}
+  .intro.swing{opacity:0;transition:opacity .65s ease}
+  .revealed .friend-choice h1,.revealed .friend-choice h2,.revealed .friend-buttons button{opacity:1;transform:none;animation:gentle-reveal .35s ease both;animation-delay:0s}
+  .fx,.fx.show,.art.fx,.art.fx.show{opacity:1;transform:none;translate:none;scale:1;rotate:none;filter:none;animation:none;transition:none;will-change:auto}
+  .revealed .hero .in > *{opacity:1;transform:none;animation:none}
+}
 </style>
 
 <div class="app" id="app">
@@ -246,13 +261,13 @@ body:not(.revealed) .hero .in > *{opacity:0}
 <script>
 (function () {
   var body = document.body, intro = document.getElementById('intro');
-  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches, K = reduce ? 0.01 : 1;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var statusEl = document.getElementById('status');
   body.classList.add('locked');
 
   intro.classList.add('ready');
   var burst = document.getElementById('openingBurst');
-  for (var particle = 0; particle < 32; particle++) {
+  for (var particle = 0; !reduce && particle < 32; particle++) {
     var piece = document.createElement('i');
     var angle = particle * Math.PI * 2 / 32;
     var distance = 130 + Math.random() * 170;
@@ -277,22 +292,22 @@ body:not(.revealed) .hero .in > *{opacity:0}
 
   /* opening: the seal fades, the envelope parts upward and downward, the invitation is already underneath */
   var opened = false, swung = false;
-  function later(ms, fn) { setTimeout(fn, ms * K); }
+  function later(ms, fn) { setTimeout(fn, ms); }
   /* the clip has ended: fade the intro out and reveal the page */
   function swing() {
     if (swung) return; swung = true;
     intro.classList.add('swing');
-    later(900, function () {
+    later(reduce ? 650 : 900, function () {
       window.scrollTo(0, 0);
       body.classList.remove('locked'); body.classList.add('revealed'); intro.style.pointerEvents = 'none'; startPetals();
     });
-    later(1800, function () { intro.style.display = 'none'; document.getElementById('friendTitle').focus({preventScroll:true}); });
+    later(reduce ? 1000 : 1800, function () { intro.style.display = 'none'; document.getElementById('friendTitle').focus({preventScroll:true}); });
   }
   function open() {
     if (opened || !intro.classList.contains('ready')) return; opened = true;
     intro.classList.add('opened');
     statusEl.textContent = '卡片已開啟';
-    later(2400, swing);
+    later(reduce ? 700 : 2400, swing);
   }
   intro.addEventListener('click', open);
   intro.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
